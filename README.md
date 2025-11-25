@@ -1,6 +1,8 @@
 This project is not yet ready for generic use. I am using it for drone recorded data currently.
 I'll work on redoing it to be useful for other neuroevolutionary projects later...
 
+See the setup folder for a getting-started video.
+
 ## Setup
 
 This project requires Python 3.10 and uses a virtual environment to manage dependencies.
