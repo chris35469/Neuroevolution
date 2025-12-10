@@ -161,14 +161,11 @@ Write-Host ""
 
 # Check if requirements.txt exists
 if (-not (Test-Path "requirements.txt")) {
-    Write-ColorOutput "✗ requirements.txt not found!" "Red"
-    Write-ColorOutput "Creating a basic requirements.txt file..." "Yellow"
-    @"
-torch>=2.0.0
-numpy>=1.24.0
-"@ | Out-File -FilePath "requirements.txt" -Encoding utf8
-    Write-ColorOutput "✓ Created requirements.txt" "Green"
-    Write-Host ""
+    #Write-ColorOutput "✗ requirements.txt not found!" "Red"
+    #Write-ColorOutput "Creating a basic requirements.txt file..." "Yellow"
+    #$requirementsLines = @("torch>=2.0.0", "numpy>=1.24.0")
+    #$requirementsLines | Out-File -FilePath "requirements.txt" -Encoding utf8
+    #Write-ColorOutput "✓ Created requirements.txt" "Green"
 }
 
 # Install dependencies
@@ -184,8 +181,8 @@ Write-Host ""
 # Verify installation
 Write-ColorOutput "Verifying installation..." "Cyan"
 try {
-    $torchVersion = & python -c "import torch; print(torch.__version__)" 2>&1
-    $numpyVersion = & python -c "import numpy; print(numpy.__version__)" 2>&1
+    $torchVersion = & python -c 'import torch; print(torch.__version__)' 2>&1
+    $numpyVersion = & python -c 'import numpy; print(numpy.__version__)' 2>&1
     Write-Host "PyTorch version: $torchVersion"
     Write-Host "NumPy version: $numpyVersion"
     Write-ColorOutput "✓ Installation verified" "Green"
