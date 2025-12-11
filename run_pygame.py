@@ -8,6 +8,7 @@ from run_all import (GENERATIONS, POPULATION_SIZE, BEST_INDIVIDUALS_SIZE,
                      SAVE_MODELS, SAVE_CSV_RESULTS)
 
 from simplenet import SimpleNet
+from game import start_game
 
 BASE_DIRECTORY = 'train_ycommand'
 RUN_TYPE = 'y_command'
@@ -53,15 +54,21 @@ for generation in range(generations):
         individuals = []
         for i in range(population_size):
             individual_id = f"{generation}_{i}"
-            individual = Individual(input_features=4096, h1=512, h2=256, h3=128, output_features=3, individual_id=individual_id, verbose=False)
+            model = SimpleNet()
+            individual = Individual(model=model, individual_id=individual_id, verbose=False)
             individual.generation = generation
             
             # Train the individual before evaluating fitness
-            trainer = ModelTrainer(individual.model, learning_rate=training_learning_rate, verbose=training_verbose)
-            trainer.train(X, y_target, epochs=training_epochs)
+            # trainer = ModelTrainer(individual.model, learning_rate=training_learning_rate, verbose=training_verbose)
+            # trainer.train(X, y_target, epochs=training_epochs)
             
             # Evaluate fitness after training
-            fitness = individual.evaluate_fitness(X, y_target)
+            #fitness = individual.evaluate_fitness(X, y_target)
+            time_alive = start_game(individual.model)
+            individual.set_fitness(time_alive)
+           
+            print(f"Time alive: {individual.fitness}")
+
             individuals.append(individual)
             if SAVE_MODELS:
                 individual.save(f'{BASE_DIRECTORY}/models/{RUN_TYPE}/model_{individual.individual_id}')
@@ -109,9 +116,15 @@ for generation in range(generations):
     for i, individual in enumerate(individuals):
         if individual.fitness is None:  # Only train and evaluate if not already evaluated
             # Train the individual before evaluating fitness
-            trainer = ModelTrainer(individual.model, learning_rate=training_learning_rate, verbose=training_verbose)
-            trainer.train(X, y_target, epochs=training_epochs)
-            fitness = individual.evaluate_fitness(X, y_target)
+            #trainer = ModelTrainer(individual.model, learning_rate=training_learning_rate, verbose=training_verbose)
+            #trainer.train(X, y_target, epochs=training_epochs)
+            #fitness = individual.evaluate_fitness(X, y_target)
+            #print(f"Evaluating fitness for {individual.model}")
+            time_alive = start_game(individual.model)
+            individual.set_fitness(time_alive)
+            print(f"Time alive: {individual.fitness}")
+
+
         else:
             fitness = individual.fitness
         fitnesses.append(fitness)

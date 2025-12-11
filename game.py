@@ -34,9 +34,13 @@ class Bird:
         # Track how long the bird has been alive (frames)
         self.birth = time.time()
         self.time_alive = 0
+        self.is_gravity = False
         
     def get_age(self):
         return time.time() - self.birth
+    
+    def set_gravity(self, is_gravity):
+        self.is_gravity = is_gravity
 
     def die(self):
         self.time_alive =  time.time() - self.birth
@@ -48,8 +52,9 @@ class Bird:
         self.velocity = JUMP_STRENGTH
         
     def update(self):
-        self.velocity += GRAVITY
-        self.y += self.velocity
+        if self.is_gravity:
+            self.velocity += GRAVITY
+            self.y += self.velocity
         
         # Prevent bird from going off screen
         if self.y < 0:
@@ -217,6 +222,9 @@ def start_game(model):
                     pipes.remove(pipe)
 
             if len(pipes) > 0:
+                if bird.is_gravity == False:
+                    bird.set_gravity(True)
+
                 dx, dy = get_pipe_bird_distance(bird, pipes[0])
 
                 with torch.no_grad():
@@ -224,6 +232,7 @@ def start_game(model):
                     y = model(X)
                     predictions = torch.argmax(y, dim=1)
                     if predictions.numpy()[0] == 0:
+                        print("Jumping")
                         bird.jump()
             else:
                 if random.random() < 0.1:

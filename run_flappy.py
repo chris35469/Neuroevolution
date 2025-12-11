@@ -20,13 +20,20 @@ class SimpleNet(nn.Module):
         return x
 
 
-for i in range(20):
-    print(f"Iteration {i}")
-    model = SimpleNet()
-    time_alive = start_game(model)
-    times.append(time_alive)
-    print("waiting for 3 seconds")
-    time.sleep(3)
+if __name__ == "__main__":
+    pass
+    # for i in range(20):
+    #     print(f"Iteration {i}")
+    #     model = SimpleNet()
+    #     time_alive = start_game(model)
+    #     times.append(time_alive)
+    #     print("waiting for 3 seconds")
+    #     time.sleep(3)
+
+
+
+
+
     # Print out the model's weights
     # for name, param in model.named_parameters():
     #     print(f"Weights of {name}:")

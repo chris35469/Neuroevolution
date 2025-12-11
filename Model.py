@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import os
 import copy
-
+from simplenet import SimpleNet
 # Create a model class
 class CreateModel(nn.Module):
     def __init__(self, input_features, h1, h2, h3, output_features, verbose=True):
@@ -13,6 +13,7 @@ class CreateModel(nn.Module):
         self.fc3 = nn.Linear(h2, h3)
         self.fc4 = nn.Linear(h3, output_features)
         self.verbose = verbose
+        
     def forward(self, x):
         if self.verbose:
             print(f"Input shape: {x.shape}")
@@ -207,6 +208,11 @@ class Individual:
             'output_features': output_features if model is None else None,
         }
     
+    
+    def set_fitness(self, fitness):
+        self.fitness = fitness
+        self.metadata['evaluated'] = True
+    
     def evaluate_fitness(self, X, y, loss_fn=None):
         """
         Evaluate fitness of this individual.
@@ -296,14 +302,17 @@ class Individual:
             New Individual (offspring)
         """
         # Create new model with same architecture
-        offspring_model = CreateModel(
-            self.architecture['input_features'] or 4096,
-            self.architecture['h1'] or 512,
-            self.architecture['h2'] or 256,
-            self.architecture['h3'] or 128,
-            self.architecture['output_features'] or 3,
-            verbose=self.model.verbose
-        )
+        # offspring_model = CreateModel(
+        #     self.architecture['input_features'] or 4096,
+        #     self.architecture['h1'] or 512,
+        #     self.architecture['h2'] or 256,
+        #     self.architecture['h3'] or 128,
+        #     self.architecture['output_features'] or 3,
+        #     verbose=self.model.verbose
+        # )
+
+        # Temporarily use SimpleNet as the offspring model
+        offspring_model = SimpleNet()
         
         # Perform uniform crossover on weights
         with torch.no_grad():
